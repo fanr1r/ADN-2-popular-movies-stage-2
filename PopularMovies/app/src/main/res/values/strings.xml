@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="title_activity_detail">Details</string>
+
+    <string name="title_activity_settings">Settings</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <string name="pref_sort_oder_label">Sort Order</string>
+    <string name="pref_sort_oder_label_popularity">Most popular</string>
+    <string name="pref_sort_order_label_rate">Higest rated</string>
+
+    <string name="pref_sort_order_key" translatable="false">sort_order</string>
+    <string name="pref_sort_order_popularity" translatable="false">popular</string>
+    <string name="pref_sort_order_rate" translatable="false">top_rated</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="intent_extra_movie">com.example.android.popularmovies.intent.extra.movie</string>
+
+    <string name="title_activity_movie_detail">MovieDetail</string>
+    <string name="title_activity_main">Pop Movies</string>
+</resources>
