@@ -27,4 +27,5 @@
     <string name="sync_account_type">popularmovies.android.example.com</string>
     <string name="content_authority">com.example.android.popularmovies.app</string>
     <string name="no_movies_to_show_visit_the_settings_to_get_a_movie_list">No movies to show. Visit the settings to get a movie list.</string>
+    <string name="error_cant_get_fragment">Can\'t get fragment</string>
 </resources>

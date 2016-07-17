@@ -182,8 +182,7 @@ public class PopularMoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         JSONArray movieJsonArray = movieJson.getJSONArray(MDB_LIST);
 
         // Insert the new movie information into the database
-        Vector<ContentValues> cVVector = new Vector<ContentValues>(movieJsonArray.length());
-        
+
         for (int i = 0; i < movieJsonArray.length(); i++) {
 
             JSONObject movieJsonObject = movieJsonArray.getJSONObject(i);
@@ -201,26 +200,20 @@ public class PopularMoviesSyncAdapter extends AbstractThreadedSyncAdapter {
             movieValues.put(MovieEntry.COLUMN_PLOT_SYNOPSIS, plotSynopsis);
             movieValues.put(MovieEntry.COLUMN_USER_RATING, userRating);
             movieValues.put(MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
-            movieValues.put(MovieEntry.COLUMN_FAVORITE, "0");
 
-            cVVector.add(movieValues);
+            // update old data so we don't build up an endless history
+            int rowsUpdated = getContext().getContentResolver().update(MovieEntry.CONTENT_URI,
+                    movieValues,
+                    MovieEntry.COLUMN_TITLE + " == ?",
+                    new String[] {title});
+            if (rowsUpdated == 0) {
+                movieValues.put(MovieEntry.COLUMN_FAVORITE, "0");
+                //add the new movie to db
+                getContext().getContentResolver().insert(MovieEntry.CONTENT_URI, movieValues);
+            }
         }
 
-        int inserted = 0;
-        // add to database
-        if ( cVVector.size() > 0 ) {
-            // delete old data so we don't build up an endless history
-            getContext().getContentResolver().delete(MovieEntry.CONTENT_URI,
-                    MovieEntry.COLUMN_MOVIE_LIST_SETTING + " == ?",
-                    new String[] {Utility.getPreferredMovies(getContext())});
-
-            //add the new movies list
-            ContentValues[] cvArray = new ContentValues[cVVector.size()];
-            cVVector.toArray(cvArray);
-                getContext().getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, cvArray);
-        }
-
-        Log.d(LOG_TAG, "Sync Complete. " + cVVector.size() + " Inserted");
+        Log.d(LOG_TAG, "Sync Complete.");
 
     }
 

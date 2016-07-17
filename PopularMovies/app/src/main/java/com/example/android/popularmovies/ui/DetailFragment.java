@@ -11,11 +11,13 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
+import com.example.android.popularmovies.sync.UpdateFavoriteFlagTask;
 import com.squareup.picasso.Picasso;
 /**
  * A placeholder fragment containing a simple view.
@@ -54,6 +56,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mSynopsisTextView;
     private TextView mRateTextView;
     private TextView mReleaseDateTextView;
+    private Button mFavoriteButton;
 
     public DetailFragment() {
     }
@@ -74,6 +77,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mSynopsisTextView = (TextView) rootView.findViewById(R.id.synopsis);
         mRateTextView = (TextView) rootView.findViewById(R.id.rateValue);
         mReleaseDateTextView = (TextView) rootView.findViewById(R.id.release_date_text_view);
+        mFavoriteButton = (Button) rootView.findViewById(R.id.fav_button);
 
         return rootView;
     }
@@ -117,6 +121,22 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mRateTextView.setText(data.getString(COL_MOVIE_USER_RATING) + "/10");
 
             mReleaseDateTextView.setText(data.getString(COL_MOVIE_RELEASE_DATE));
+
+            final String title = data.getString(COL_MOVIE_TITLE);
+            mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UpdateFavoriteFlagTask updateFavoriteFlagTask = new UpdateFavoriteFlagTask(getContext(), title);
+                    updateFavoriteFlagTask.execute();
+                }
+            });
+            if (data.getInt(COL_MOVIE_FAVORITE) == 1) {
+                mFavoriteButton.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                mFavoriteButton.setTextColor(getResources().getColor(R.color.white));
+            } else {
+                mFavoriteButton.setBackgroundColor(getResources().getColor(R.color.gray));
+                mFavoriteButton.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
         }
     }
 
