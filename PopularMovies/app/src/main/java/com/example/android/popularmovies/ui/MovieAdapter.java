@@ -3,6 +3,7 @@ package com.example.android.popularmovies.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.Utility;
+import com.example.android.popularmovies.data.MovieDbHelper;
 import com.squareup.picasso.Picasso;
 
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
@@ -20,8 +23,11 @@ public class MovieAdapter extends CursorAdapter {
     // Flag to determine if we want to use a separate view for "details".
     private boolean mUsePhoneLayout = true;
 
+    private Context mContext;
+
     public MovieAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
+        mContext = context;
     }
 
     /*
@@ -36,7 +42,6 @@ public class MovieAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
-
         ImageView iconView = (ImageView) view.findViewById(R.id.movie_image);
         final String title = cursor.getString(MainActivityFragment.COL_MOVIE_TITLE);
         iconView.setOnClickListener(new View.OnClickListener() {

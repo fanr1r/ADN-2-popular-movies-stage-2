@@ -1,19 +1,25 @@
 package com.example.android.popularmovies.ui;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FilterQueryProvider;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.Utility;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
+import com.example.android.popularmovies.data.MovieDbHelper;
 import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
 
 /**
@@ -69,6 +75,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         // Get a reference to the ListView, and attach this adapter to it.
         mGridView = (GridView) rootView.findViewById(R.id.movies_grid);
+        View emptyView = rootView.findViewById(R.id.empty_movies_grid_text_view);
+        mGridView.setEmptyView(emptyView);
         mGridView.setAdapter(mMovieAdapter);
 
         return rootView;
@@ -115,7 +123,38 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mMovieAdapter.swapCursor(cursor);
+        String movieListSetting = Utility.getPreferredMovies(getContext());
+        if (movieListSetting.equals(getString(R.string.pref_show_movies_by_favorite))) {
+            MovieDbHelper dbHelper = new MovieDbHelper(getContext());
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cur = db.query(
+                    MovieEntry.TABLE_NAME,  // Table to Query
+                    null, // all columns
+                    MovieEntry.COLUMN_FAVORITE + " == ?", // Columns for the "where" clause
+                    new String[] {"1"}, // Values for the "where" clause
+                    null, // columns to group by
+                    null, // columns to filter by row groups
+                    null // sort order
+            );
+            if (cur.getColumnCount() > 0) {
+                mMovieAdapter.swapCursor(cur);
+            } else {
+                mMovieAdapter.swapCursor(null);
+            }
+        } else {
+            MovieDbHelper dbHelper = new MovieDbHelper(getContext());
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cur = db.query(
+                    MovieEntry.TABLE_NAME,  // Table to Query
+                    null, // all columns
+                    MovieEntry.COLUMN_MOVIE_LIST_SETTING + " == ?", // Columns for the "where" clause
+                    new String[] {Utility.getPreferredMovies(getContext())}, // Values for the "where" clause
+                    null, // columns to group by
+                    null, // columns to filter by row groups
+                    null // sort order
+            );
+            mMovieAdapter.swapCursor(cur);
+        }
     }
 
     @Override

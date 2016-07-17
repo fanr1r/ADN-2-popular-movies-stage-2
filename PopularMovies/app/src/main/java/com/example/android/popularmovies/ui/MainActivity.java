@@ -2,6 +2,7 @@ package com.example.android.popularmovies.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             mTwoPane = false;
         }
 
-        MainActivityFragment mainActivityFragment =  ((MainActivityFragment)getSupportFragmentManager()
+        MainActivityFragment mainActivityFragment = ((MainActivityFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_main));
         mainActivityFragment.setUsePhoneLayout(!mTwoPane);
 
@@ -72,18 +73,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String moviesListOrder = Utility.getPreferredMovies( this );
+        String moviesListOrder = Utility.getPreferredMovies(this);
         // update the movies list in our second pane using the fragment manager
         if (moviesListOrder != null && !moviesListOrder.equals(mMoviesListOrder)) {
-            MainActivityFragment maf = (MainActivityFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_main);
-            if ( null != maf ) {
+            MainActivityFragment maf = (MainActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+            if (null != maf) {
                 maf.onMovieListChanged();
             }
             mMoviesListOrder = moviesListOrder;
         }
     }
 
-//    @Override
+    //    @Override
 //    public void onItemSelected(Uri contentUri) {
 //        if (mTwoPane) {
 //            // In two-pane mode, show the detail view in this activity by
