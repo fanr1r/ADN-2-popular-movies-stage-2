@@ -7,18 +7,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.Utility;
 import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     private boolean mTwoPane;
+    private String mMoviesListOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mMoviesListOrder = Utility.getPreferredMovies(this);
 
+        setContentView(R.layout.activity_main);
         if (findViewById(R.id.movie_detail_container) != null) {
             // The detail container view will be present only in the large-screen layouts
             // (res/layout-sw600dp). If this view is present, then the activity should be
@@ -38,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         MainActivityFragment mainActivityFragment =  ((MainActivityFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_main));
-//        mainActivityFragment.setUseTodayLayout(!mTwoPane);
+        mainActivityFragment.setUsePhoneLayout(!mTwoPane);
 
         PopularMoviesSyncAdapter.initializeSyncAdapter(this);
     }
@@ -65,4 +68,40 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String moviesListOrder = Utility.getPreferredMovies( this );
+        // update the movies list in our second pane using the fragment manager
+        if (moviesListOrder != null && !moviesListOrder.equals(mMoviesListOrder)) {
+            MainActivityFragment maf = (MainActivityFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+            if ( null != maf ) {
+                maf.onMovieListChanged();
+            }
+            mMoviesListOrder = moviesListOrder;
+        }
+    }
+
+//    @Override
+//    public void onItemSelected(Uri contentUri) {
+//        if (mTwoPane) {
+//            // In two-pane mode, show the detail view in this activity by
+//            // adding or replacing the detail fragment using a
+//            // fragment transaction.
+//            Bundle args = new Bundle();
+//            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+//
+//            DetailFragment fragment = new DetailFragment();
+//            fragment.setArguments(args);
+//
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.movie_detail_container, fragment, DETAILFRAGMENT_TAG)
+//                    .commit();
+//        } else {
+//            Intent intent = new Intent(this, DetailActivity.class)
+//                    .setData(contentUri);
+//            startActivity(intent);
+//        }
+//    }
 }

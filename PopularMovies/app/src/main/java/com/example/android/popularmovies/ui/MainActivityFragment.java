@@ -27,7 +27,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     private GridView mGridView;
     private int mPosition = GridView.INVALID_POSITION;
-    private boolean mUseTodayLayout;
+    private boolean mUsePhoneLayout;
 
     private static final String SELECTED_KEY = "selected_position";
 
@@ -121,5 +121,16 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mMovieAdapter.swapCursor(null);
+    }
+
+    public void setUsePhoneLayout(boolean usePhoneLayout) {
+        mUsePhoneLayout = usePhoneLayout;
+        if (mMovieAdapter != null) {
+            mMovieAdapter.setUseTodayLayout(mUsePhoneLayout);
+        }
+
+        if (!mUsePhoneLayout) {
+            mGridView.setNumColumns(3);
+        }
     }
 }
