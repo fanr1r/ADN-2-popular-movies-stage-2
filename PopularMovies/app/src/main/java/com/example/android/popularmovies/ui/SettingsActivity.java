@@ -121,7 +121,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         setupActionBar();
         addPreferencesFromResource(R.xml.pref_general);
 
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sort_order_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_show_movies_key)));
     }
 
     /**

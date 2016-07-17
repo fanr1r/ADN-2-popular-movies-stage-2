@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         MainActivityFragment mainActivityFragment =  ((MainActivityFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_main));
 //        mainActivityFragment.setUseTodayLayout(!mTwoPane);
+
+        PopularMoviesSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override

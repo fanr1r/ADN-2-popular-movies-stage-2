@@ -7,19 +7,23 @@
 
     <!-- Strings related to Settings -->
 
-    <string name="pref_sort_oder_label">Sort Order</string>
-    <string name="pref_sort_oder_label_popularity">Most popular</string>
-    <string name="pref_sort_order_label_rate">Higest rated</string>
+    <string name="pref_show_movies_label">Movie List By</string>
+    <string name="pref_show_movies_label_popularity">Most popular</string>
+    <string name="pref_show_movies_label_rate">Highest rated</string>
+    <string name="pref_show_movies_label_favorite">My favorites</string>
 
-    <string name="pref_sort_order_key" translatable="false">sort_order</string>
-    <string name="pref_sort_order_popularity" translatable="false">popular</string>
-    <string name="pref_sort_order_rate" translatable="false">top_rated</string>
+    <string name="pref_show_movies_key" translatable="false">sort_order</string>
+    <string name="pref_show_movies_default" translatable="false">popular</string>
+    <string name="pref_show_movies_by_popularity" translatable="false">popular</string>
+    <string name="pref_show_movies_by_rate" translatable="false">top_rated</string>
+    <string name="pref_show_movies_by_favorite" translatable="false">favorite</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="intent_extra_movie">com.example.android.popularmovies.intent.extra.movie</string>
 
     <string name="title_activity_movie_detail">MovieDetail</string>
     <string name="title_activity_main">Pop Movies</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">popularmovies.android.example.com</string>
+    <string name="content_authority">com.example.android.popularmovies.app</string>
 </resources>
