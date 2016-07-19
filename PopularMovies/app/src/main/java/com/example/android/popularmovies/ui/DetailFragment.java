@@ -13,18 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
 import com.example.android.popularmovies.sync.UpdateFavoriteFlagTask;
 import com.squareup.picasso.Picasso;
+
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>  {
+public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     static final String DETAIL_URI = "URI";
-    
+
     private Uri mUri;
 
     private static final int DETAIL_LOADER = 0;
@@ -51,6 +53,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_MOVIE_RELEASE_DATE = 6;
     static final int COL_MOVIE_FAVORITE = 7;
 
+    private ScrollView mContentScrollView;
     private ImageView mThumbnailImageView;
     private TextView mTitleTextView;
     private TextView mSynopsisTextView;
@@ -72,6 +75,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
         }
 
+        mContentScrollView = (ScrollView) rootView.findViewById(R.id.detail_fragment_content);
         mTitleTextView = (TextView) rootView.findViewById(R.id.title);
         mThumbnailImageView = (ImageView) rootView.findViewById(R.id.thumbnail);
         mSynopsisTextView = (TextView) rootView.findViewById(R.id.synopsis);
@@ -90,7 +94,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if ( null != mUri ) {
+        if (null != mUri) {
             // Now create and return a CursorLoader that will take care of
             // creating a Cursor for the data being displayed.
             return new CursorLoader(
@@ -137,10 +141,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 mFavoriteButton.setBackgroundColor(getResources().getColor(R.color.gray));
                 mFavoriteButton.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             }
+
+            mContentScrollView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) { }
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
 
 }

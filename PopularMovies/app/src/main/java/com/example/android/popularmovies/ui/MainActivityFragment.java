@@ -8,13 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FilterQueryProvider;
+import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.Utility;
@@ -62,6 +60,18 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     static final int COL_MOVIE_RELEASE_DATE = 6;
     static final int COL_MOVIE_FAVORITE = 7;
 
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * MainActivityFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Uri dateUri);
+    }
+
     public MainActivityFragment() {
     }
 
@@ -78,6 +88,38 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         View emptyView = rootView.findViewById(R.id.empty_movies_grid_text_view);
         mGridView.setEmptyView(emptyView);
         mGridView.setAdapter(mMovieAdapter);
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                // if it cannot seek to that position.
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                    String title = cursor.getString(MainActivityFragment.COL_MOVIE_TITLE);
+                    ((Callback) getActivity())
+                            .onItemSelected(MovieEntry.buildMovieUri(title));
+                }
+                mPosition = position;
+            }
+        });
+
+
+        // If there's instance state, mine it for useful information.
+        // The end-goal here is that the user never knows that turning their device sideways
+        // does crazy lifecycle related things.  It should feel like some stuff stretched out,
+        // or magically appeared to take advantage of room, but data or place in the app was never
+        // actually *lost*.
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+
+            // Restore movie item selector
+            // Will not work for emulator. "Selection and focus do not exist in touch mode."
+            // (https://groups.google.com/forum/#!topic/android-developers/8IpYFn26qMg)
+            mGridView.setSelection(savedInstanceState.getInt(SELECTED_KEY));
+        }
 
         return rootView;
     }
@@ -131,7 +173,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                     MovieEntry.TABLE_NAME,  // Table to Query
                     null, // all columns
                     MovieEntry.COLUMN_FAVORITE + " == ?", // Columns for the "where" clause
-                    new String[] {"1"}, // Values for the "where" clause
+                    new String[]{"1"}, // Values for the "where" clause
                     null, // columns to group by
                     null, // columns to filter by row groups
                     null // sort order
@@ -148,7 +190,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                     MovieEntry.TABLE_NAME,  // Table to Query
                     null, // all columns
                     MovieEntry.COLUMN_MOVIE_LIST_SETTING + " == ?", // Columns for the "where" clause
-                    new String[] {Utility.getPreferredMovies(getContext())}, // Values for the "where" clause
+                    new String[]{Utility.getPreferredMovies(getContext())}, // Values for the "where" clause
                     null, // columns to group by
                     null, // columns to filter by row groups
                     null // sort order
@@ -170,6 +212,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         if (!mUsePhoneLayout) {
             mGridView.setNumColumns(3);
+            mGridView.setDrawSelectorOnTop(true);
         }
     }
 }

@@ -1,8 +1,10 @@
 <ScrollView
+    android:id="@+id/detail_fragment_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,6 +66,8 @@
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp"
                 android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:maxHeight="300dp"
                 android:scaleType="centerInside"/>
 
             <LinearLayout
@@ -78,23 +82,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="8dp"
-                    android:text="2016"
-                    android:textAppearance="?android:textAppearanceLarge"/>
+                    android:textAppearance="?android:textAppearanceLarge"
+                    tools:text="2016"/>
 
                 <TextView
                     android:id="@+id/rateValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="8dp"
-                    android:text="8.1/10"
-                    android:textAppearance="?android:textAppearanceSmall"/>
+                    android:textAppearance="?android:textAppearanceSmall"
+                    tools:text="8.1/10"/>
 
                 <Button
                     android:id="@+id/fav_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="mark as\nfavorite"/>
+                    android:text="@string/mark_as_favorite"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -103,9 +107,43 @@
             android:id="@+id/synopsis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:text="New Text"/>
+            android:background="@android:color/black"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:text="@string/trailers"
+            android:textAppearance="?android:textAppearanceLarge"/>
+
+        <LinearLayout
+            android:id="@+id/trailers_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:background="@android:color/black"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:text="@string/reviews"
+            android:textAppearance="?android:textAppearanceLarge"/>
 
     </LinearLayout>
 

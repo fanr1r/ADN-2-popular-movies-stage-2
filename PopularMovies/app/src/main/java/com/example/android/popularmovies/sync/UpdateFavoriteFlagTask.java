@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
@@ -90,18 +89,27 @@ public class UpdateFavoriteFlagTask extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-            try {
-                // Reload current fragment
-                DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DetailFragment.class.getSimpleName());
-                df.getLoaderManager().restartLoader(LOADER, null, df);
-            } catch (Exception e) {
-                Log.v(LOG_TAG, "DetailFragment not reloaded");
-            }
+        try {
+            // Reload current fragment
+            DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DetailFragment.class.getSimpleName());
+            df.getLoaderManager().restartLoader(LOADER, null, df);
+        } catch (Exception e) {
+            Log.v(LOG_TAG, "DetailFragment not reloaded");
+        }
     }
 
     private FragmentManager getSupportFragmentManager() {
         try {
             final DetailActivity activity = (DetailActivity) mContext;
+
+            // Return the fragment manager
+            return activity.getSupportFragmentManager();
+
+        } catch (ClassCastException e) {
+            Log.d(LOG_TAG, mContext.getString(R.string.error_cant_get_fragment));
+        }
+        try {
+            final MainActivity activity = (MainActivity) mContext;
 
             // Return the fragment manager
             return activity.getSupportFragmentManager();
