@@ -44,9 +44,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:padding="32dp"
+                    android:padding="@dimen/title_padding"
                     android:textColor="@android:color/white"
-                    android:textSize="48sp"
+                    android:textSize="@dimen/title_text_size"
                     tools:text="TEST"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
@@ -56,22 +56,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="24dp"
-            android:paddingTop="8dp">
+            android:paddingBottom="@dimen/big_padding"
+            android:paddingTop="@dimen/eight_dp">
 
             <ImageView
                 android:id="@+id/thumbnail"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/zero_dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginLeft="@dimen/big_padding"
+                android:layout_marginRight="@dimen/big_padding"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
-                android:maxHeight="300dp"
+                android:maxHeight="@dimen/max_height_image_detail_fragment"
                 android:scaleType="centerInside"/>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="@dimen/zero_dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
@@ -81,7 +81,7 @@
                     android:id="@+id/release_date_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
+                    android:paddingTop="@dimen/eight_dp"
                     android:textAppearance="?android:textAppearanceLarge"
                     tools:text="2016"/>
 
@@ -89,7 +89,7 @@
                     android:id="@+id/rateValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
+                    android:paddingTop="@dimen/eight_dp"
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:text="8.1/10"/>
 
@@ -97,7 +97,7 @@
                     android:id="@+id/fav_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/eight_dp"
                     android:text="@string/mark_as_favorite"/>
 
             </LinearLayout>
@@ -113,7 +113,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/line_height"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
             android:background="@android:color/black"/>
@@ -137,7 +137,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/line_height"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
