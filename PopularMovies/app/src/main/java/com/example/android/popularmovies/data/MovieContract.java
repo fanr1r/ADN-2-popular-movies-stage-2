@@ -56,6 +56,9 @@ public class MovieContract {
         // Shows if the movie is marked as favorite: 0 not favorite, 1 favorite
         public static final String COLUMN_FAVORITE = "favorite";
 
+        // The movie id used by movie db api
+        public static final String COLUMN_MOVIE_ID = "movie_id";
+
 
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

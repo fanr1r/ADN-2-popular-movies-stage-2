@@ -18,6 +18,7 @@ import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.Utility;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
 import com.example.android.popularmovies.data.MovieDbHelper;
+import com.example.android.popularmovies.sync.GetReviewsTask;
 import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
 
 /**
@@ -59,6 +60,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     static final int COL_MOVIE_USER_RATING = 5;
     static final int COL_MOVIE_RELEASE_DATE = 6;
     static final int COL_MOVIE_FAVORITE = 7;
+    static final int COL_MDB_MOVIE_ID = 8;
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -100,6 +102,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                     ((Callback) getActivity())
                             .onItemSelected(MovieEntry.buildMovieUri(title));
                 }
+                GetReviewsTask getReviewsTask = new GetReviewsTask(getContext(), Integer.toString(cursor.getInt(MainActivityFragment.COL_MDB_MOVIE_ID)));
+                getReviewsTask.execute();
                 mPosition = position;
             }
         });

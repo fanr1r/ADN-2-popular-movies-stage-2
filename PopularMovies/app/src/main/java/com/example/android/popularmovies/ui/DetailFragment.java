@@ -2,22 +2,26 @@ package com.example.android.popularmovies.ui;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
+import com.example.android.popularmovies.data.Review;
 import com.example.android.popularmovies.sync.UpdateFavoriteFlagTask;
 import com.squareup.picasso.Picasso;
 
@@ -60,6 +64,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mRateTextView;
     private TextView mReleaseDateTextView;
     private Button mFavoriteButton;
+    private LinearLayout mTrailerContainer;
+    private TextView mReviewLabelTextView;
+    private LinearLayout mReviewContainer;
 
     public DetailFragment() {
     }
@@ -82,6 +89,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mRateTextView = (TextView) rootView.findViewById(R.id.rateValue);
         mReleaseDateTextView = (TextView) rootView.findViewById(R.id.release_date_text_view);
         mFavoriteButton = (Button) rootView.findViewById(R.id.fav_button);
+        mTrailerContainer = (LinearLayout) rootView.findViewById(R.id.trailers_linear_layout);
+        mReviewLabelTextView = (TextView) rootView.findViewById(R.id.reviews_label_text_view);
+        mReviewContainer = (LinearLayout) rootView.findViewById(R.id.reviews_linear_layout);
 
         return rootView;
     }
@@ -150,4 +160,24 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
+    public void setReviews(Review[] reviews) {
+
+        if (reviews.length > 0) {
+            mReviewLabelTextView.setVisibility(View.VISIBLE);
+        }
+
+        for (int i = 0; i < reviews.length; i++) {
+            TextView contentTextView = new TextView(getContext());
+            contentTextView.setText(reviews[i].getContent());
+            mReviewContainer.addView(contentTextView);
+
+            TextView authorTextView = new TextView(getContext());
+            authorTextView.setText(reviews[i].getAuthor());
+            authorTextView.setGravity(Gravity.RIGHT);
+            authorTextView.setTypeface(null, Typeface.ITALIC);
+            mReviewContainer.addView(authorTextView);
+
+        }
+
+    }
 }

@@ -66,7 +66,8 @@ public class PopularMoviesSyncAdapter extends AbstractThreadedSyncAdapter {
             MovieEntry.COLUMN_POSTER_PATH,
             MovieEntry.COLUMN_RELEASE_DATE,
             MovieEntry.COLUMN_PLOT_SYNOPSIS,
-            MovieEntry.COLUMN_USER_RATING
+            MovieEntry.COLUMN_USER_RATING,
+            MovieEntry.COLUMN_MOVIE_ID
     };
 
     // these indices must match the projection
@@ -76,6 +77,7 @@ public class PopularMoviesSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final int INDEX_PLOT_SYNOPSIS = 3;
     private static final int INDEX_RELEASE_DATE = 4;
     private static final int INDEX_USER_RATING = 5;
+    private static final int INDEX_MOVIE_ID = 6;
 
     public PopularMoviesSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -177,6 +179,7 @@ public class PopularMoviesSyncAdapter extends AbstractThreadedSyncAdapter {
         final String MDB_PLOT_SYNOPSIS = "overview";
         final String MDB_USER_RATING = "vote_average";
         final String MDB_RELEASE_DATE = "release_date";
+        final String MDB_MOVIE_ID = "id";
 
         JSONObject movieJson = new JSONObject(moviesJsonStr);
         JSONArray movieJsonArray = movieJson.getJSONArray(MDB_LIST);
@@ -191,6 +194,7 @@ public class PopularMoviesSyncAdapter extends AbstractThreadedSyncAdapter {
             String plotSynopsis = movieJsonObject.getString(MDB_PLOT_SYNOPSIS);
             Double userRating = movieJsonObject.getDouble(MDB_USER_RATING);
             String releaseDate = movieJsonObject.getString(MDB_RELEASE_DATE);
+            int movieId = movieJsonObject.getInt(MDB_MOVIE_ID);
 
             ContentValues movieValues = new ContentValues();
 
@@ -200,6 +204,7 @@ public class PopularMoviesSyncAdapter extends AbstractThreadedSyncAdapter {
             movieValues.put(MovieEntry.COLUMN_PLOT_SYNOPSIS, plotSynopsis);
             movieValues.put(MovieEntry.COLUMN_USER_RATING, userRating);
             movieValues.put(MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
+            movieValues.put(MovieEntry.COLUMN_MOVIE_ID, movieId);
 
             // update old data so we don't build up an endless history
             int rowsUpdated = getContext().getContentResolver().update(MovieEntry.CONTENT_URI,
