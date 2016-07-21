@@ -19,6 +19,7 @@ import com.example.android.popularmovies.Utility;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
 import com.example.android.popularmovies.data.MovieDbHelper;
 import com.example.android.popularmovies.sync.GetReviewsTask;
+import com.example.android.popularmovies.sync.GetTrailersTask;
 import com.example.android.popularmovies.sync.PopularMoviesSyncAdapter;
 
 /**
@@ -102,8 +103,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                     ((Callback) getActivity())
                             .onItemSelected(MovieEntry.buildMovieUri(title));
                 }
-                GetReviewsTask getReviewsTask = new GetReviewsTask(getContext(), Integer.toString(cursor.getInt(MainActivityFragment.COL_MDB_MOVIE_ID)));
-                getReviewsTask.execute();
                 mPosition = position;
             }
         });

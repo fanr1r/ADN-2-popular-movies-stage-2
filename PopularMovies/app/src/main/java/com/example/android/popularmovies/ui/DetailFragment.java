@@ -22,6 +22,9 @@ import android.widget.TextView;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
 import com.example.android.popularmovies.data.Review;
+import com.example.android.popularmovies.data.Trailer;
+import com.example.android.popularmovies.sync.GetReviewsTask;
+import com.example.android.popularmovies.sync.GetTrailersTask;
 import com.example.android.popularmovies.sync.UpdateFavoriteFlagTask;
 import com.squareup.picasso.Picasso;
 
@@ -43,7 +46,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             MovieEntry.COLUMN_PLOT_SYNOPSIS,
             MovieEntry.COLUMN_USER_RATING,
             MovieEntry.COLUMN_RELEASE_DATE,
-            MovieEntry.COLUMN_FAVORITE
+            MovieEntry.COLUMN_FAVORITE,
+            MovieEntry.COLUMN_MOVIE_ID
     };
 
     // These indices are tied to MOVIE_COLUMNS. If MOVIE_COLUMNS changes, these
@@ -56,6 +60,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_MOVIE_USER_RATING = 5;
     static final int COL_MOVIE_RELEASE_DATE = 6;
     static final int COL_MOVIE_FAVORITE = 7;
+    static final int COL_MDB_MOVIE_ID = 8;
 
     private ScrollView mContentScrollView;
     private ImageView mThumbnailImageView;
@@ -64,6 +69,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mRateTextView;
     private TextView mReleaseDateTextView;
     private Button mFavoriteButton;
+    private TextView mTrailerLabelTextView;
     private LinearLayout mTrailerContainer;
     private TextView mReviewLabelTextView;
     private LinearLayout mReviewContainer;
@@ -74,7 +80,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Intent intent = getActivity().getIntent();
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         Bundle arguments = getArguments();
@@ -89,6 +94,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mRateTextView = (TextView) rootView.findViewById(R.id.rateValue);
         mReleaseDateTextView = (TextView) rootView.findViewById(R.id.release_date_text_view);
         mFavoriteButton = (Button) rootView.findViewById(R.id.fav_button);
+        mTrailerLabelTextView = (TextView) rootView.findViewById(R.id.trailers_label_text_view);
         mTrailerContainer = (LinearLayout) rootView.findViewById(R.id.trailers_linear_layout);
         mReviewLabelTextView = (TextView) rootView.findViewById(R.id.reviews_label_text_view);
         mReviewContainer = (LinearLayout) rootView.findViewById(R.id.reviews_linear_layout);
@@ -122,6 +128,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()) {
+
+            GetTrailersTask getTrailersTask = new GetTrailersTask(getContext(), Integer.toString(data.getInt(COL_MDB_MOVIE_ID)));
+            getTrailersTask.execute();
+
+            GetReviewsTask getReviewsTask = new GetReviewsTask(getContext(), Integer.toString(data.getInt(COL_MDB_MOVIE_ID)));
+            getReviewsTask.execute();
 
             mTitleTextView.setText(data.getString(COL_MOVIE_TITLE));
 
@@ -177,6 +189,37 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             authorTextView.setTypeface(null, Typeface.ITALIC);
             mReviewContainer.addView(authorTextView);
 
+        }
+
+    }
+
+    public void setTrailers(final Trailer[] trailers) {
+
+        if (trailers.length > 0) {
+            mTrailerLabelTextView.setVisibility(View.VISIBLE);
+        }
+
+        for (int i = 0; i < trailers.length; i++) {
+            LinearLayout trailersLayout = new LinearLayout(getContext());
+            trailersLayout.setOrientation(LinearLayout.HORIZONTAL);
+            final int finalI = i;
+            trailersLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailers[finalI].getUrl())));
+                }
+            });
+            trailersLayout.setGravity(Gravity.CENTER_VERTICAL);
+
+            ImageView playImageView = new ImageView(getContext());
+            playImageView.setImageResource(R.drawable.ic_action_play);
+            trailersLayout.addView(playImageView);
+
+            TextView trailerNameTextView = new TextView(getContext());
+            trailerNameTextView.setText(trailers[i].getName());
+            trailersLayout.addView(trailerNameTextView);
+
+            mTrailerContainer.addView(trailersLayout);
         }
 
     }

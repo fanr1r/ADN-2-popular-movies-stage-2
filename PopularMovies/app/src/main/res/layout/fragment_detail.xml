@@ -119,11 +119,13 @@
             android:background="@android:color/black"/>
 
         <TextView
+            android:id="@+id/trailers_label_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_vertical_margin"
             android:text="@string/trailers"
-            android:textAppearance="?android:textAppearanceLarge"/>
+            android:textAppearance="?android:textAppearanceLarge"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/trailers_linear_layout"
@@ -136,6 +138,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
             android:background="@android:color/black"/>
