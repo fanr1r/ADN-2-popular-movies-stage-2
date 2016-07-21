@@ -13,6 +13,7 @@ import com.example.android.popularmovies.data.Trailer;
 import com.example.android.popularmovies.ui.DetailActivity;
 import com.example.android.popularmovies.ui.DetailFragment;
 import com.example.android.popularmovies.ui.MainActivity;
+import com.example.android.popularmovies.ui.MainActivityFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -175,7 +176,7 @@ public class GetTrailersTask extends AsyncTask<String, Void, Trailer[]> {
             return activity.getSupportFragmentManager();
 
         } catch (ClassCastException e) {
-            Log.d(LOG_TAG, mContext.getString(R.string.error_cant_get_fragment));
+            Log.d(LOG_TAG, mContext.getString(R.string.error_cant_get_fragment, DetailFragment.class.getSimpleName()));
         }
         try {
             final MainActivity activity = (MainActivity) mContext;
@@ -184,7 +185,7 @@ public class GetTrailersTask extends AsyncTask<String, Void, Trailer[]> {
             return activity.getSupportFragmentManager();
 
         } catch (ClassCastException e) {
-            Log.d(LOG_TAG, mContext.getString(R.string.error_cant_get_fragment));
+            Log.d(LOG_TAG, mContext.getString(R.string.error_cant_get_fragment, MainActivityFragment.class.getSimpleName()));
         }
         return null;
     }

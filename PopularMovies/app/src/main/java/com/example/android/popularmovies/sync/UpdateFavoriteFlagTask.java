@@ -14,6 +14,7 @@ import com.example.android.popularmovies.data.MovieDbHelper;
 import com.example.android.popularmovies.ui.DetailActivity;
 import com.example.android.popularmovies.ui.DetailFragment;
 import com.example.android.popularmovies.ui.MainActivity;
+import com.example.android.popularmovies.ui.MainActivityFragment;
 
 /**
  * Created by Eisdrachl on 17.07.2016.
@@ -93,6 +94,8 @@ public class UpdateFavoriteFlagTask extends AsyncTask<String, Void, Void> {
             // Reload current fragment
             DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DetailFragment.class.getSimpleName());
             df.getLoaderManager().restartLoader(LOADER, null, df);
+            MainActivityFragment maf = (MainActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+            maf.getLoaderManager().restartLoader(LOADER, null, maf);
         } catch (Exception e) {
             Log.v(LOG_TAG, "DetailFragment not reloaded");
         }
@@ -106,7 +109,7 @@ public class UpdateFavoriteFlagTask extends AsyncTask<String, Void, Void> {
             return activity.getSupportFragmentManager();
 
         } catch (ClassCastException e) {
-            Log.d(LOG_TAG, mContext.getString(R.string.error_cant_get_fragment));
+            Log.d(LOG_TAG, mContext.getString(R.string.error_cant_get_fragment, DetailFragment.class.getSimpleName()));
         }
         try {
             final MainActivity activity = (MainActivity) mContext;
@@ -115,7 +118,7 @@ public class UpdateFavoriteFlagTask extends AsyncTask<String, Void, Void> {
             return activity.getSupportFragmentManager();
 
         } catch (ClassCastException e) {
-            Log.d(LOG_TAG, mContext.getString(R.string.error_cant_get_fragment));
+            Log.d(LOG_TAG, mContext.getString(R.string.error_cant_get_fragment, MainActivityFragment.class.getSimpleName()));
         }
         return null;
     }
