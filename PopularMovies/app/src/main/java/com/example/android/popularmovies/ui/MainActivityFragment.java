@@ -156,50 +156,21 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        Uri inventoryUri = MovieEntry.buildMovieUri();
+        String movieListSetting = Utility.getPreferredMovies(getContext());
+        Uri movieUri = MovieEntry.buildMovieUriWithListSetting(movieListSetting);
 
         return new CursorLoader(getActivity(),
-                inventoryUri,
+                movieUri,
                 MOVIE_COLUMNS,
                 null,
                 null,
                 null);
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        String movieListSetting = Utility.getPreferredMovies(getContext());
-        if (movieListSetting.equals(getString(R.string.pref_show_movies_by_favorite))) {
-            MovieDbHelper dbHelper = new MovieDbHelper(getContext());
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            Cursor cur = db.query(
-                    MovieEntry.TABLE_NAME,  // Table to Query
-                    null, // all columns
-                    MovieEntry.COLUMN_FAVORITE + " == ?", // Columns for the "where" clause
-                    new String[]{"1"}, // Values for the "where" clause
-                    null, // columns to group by
-                    null, // columns to filter by row groups
-                    null // sort order
-            );
-            if (cur.getColumnCount() > 0) {
-                mMovieAdapter.swapCursor(cur);
-            } else {
-                mMovieAdapter.swapCursor(null);
-            }
-        } else {
-            MovieDbHelper dbHelper = new MovieDbHelper(getContext());
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            Cursor cur = db.query(
-                    MovieEntry.TABLE_NAME,  // Table to Query
-                    null, // all columns
-                    MovieEntry.COLUMN_MOVIE_LIST_SETTING + " == ?", // Columns for the "where" clause
-                    new String[]{Utility.getPreferredMovies(getContext())}, // Values for the "where" clause
-                    null, // columns to group by
-                    null, // columns to filter by row groups
-                    null // sort order
-            );
-            mMovieAdapter.swapCursor(cur);
-        }
+        mMovieAdapter.swapCursor(cursor);
     }
 
     @Override

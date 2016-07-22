@@ -7,7 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.v4.content.CursorLoader;
 
+import com.example.android.popularmovies.R;
+import com.example.android.popularmovies.Utility;
 import com.example.android.popularmovies.data.MovieContract.MovieEntry;
 
 /**
@@ -21,29 +24,58 @@ public class MovieProvider extends ContentProvider {
 
     static final int MOVIE = 100;
     static final int MOVIE_WITH_NAME = 101;
+    static final int MOVIE_WITH_LIST_SETTING = 102;
 
-    private static final SQLiteQueryBuilder sInventoryByNameQueryBuilder;
+    private static final SQLiteQueryBuilder sMovieByNameQueryBuilder;
+    private static final SQLiteQueryBuilder sMovieByListSettingQueryBuilder;
+    private static final SQLiteQueryBuilder sMovieByListSettingFavoriteQueryBuilder;
 
-    static{
-        sInventoryByNameQueryBuilder = new SQLiteQueryBuilder();
+    static {
+        sMovieByNameQueryBuilder = new SQLiteQueryBuilder();
 
-        sInventoryByNameQueryBuilder.setTables(
+        sMovieByNameQueryBuilder.setTables(
                 MovieEntry.TABLE_NAME
         );
     }
 
-    //inventory.name = ?
-    private static final String sInventoryNameSelection =
-            MovieEntry.TABLE_NAME+
+    static {
+        sMovieByListSettingQueryBuilder = new SQLiteQueryBuilder();
+
+        sMovieByListSettingQueryBuilder.setTables(
+                MovieEntry.TABLE_NAME
+        );
+    }
+
+    static {
+        sMovieByListSettingFavoriteQueryBuilder = new SQLiteQueryBuilder();
+
+        sMovieByListSettingFavoriteQueryBuilder.setTables(
+                MovieEntry.TABLE_NAME
+        );
+    }
+
+    //movie.name = ?
+    private static final String sMovieNameSelection =
+            MovieEntry.TABLE_NAME +
                     "." + MovieEntry.COLUMN_TITLE + " = ? ";
 
-    private Cursor getInventoryByName(Uri uri, String[] projection, String sortOrder) {
+    //movie.movie_list_setting = ?
+    private static final String sMovieListSetting =
+            MovieEntry.TABLE_NAME +
+                    "." + MovieEntry.COLUMN_MOVIE_LIST_SETTING + " = ? ";
+
+    //movie.favorite = ?
+    private static final String sMovieListSettingFavorite =
+            MovieEntry.TABLE_NAME +
+                    "." + MovieEntry.COLUMN_FAVORITE + " = ? ";
+
+    private Cursor getMovieByName(Uri uri, String[] projection, String sortOrder) {
         String name = MovieEntry.getTitleFromUri(uri);
 
         String[] selectionArgs = new String[]{name};
-        String selection = sInventoryNameSelection;
+        String selection = sMovieNameSelection;
 
-        return sInventoryByNameQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        return sMovieByNameQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 selection,
                 selectionArgs,
@@ -51,6 +83,36 @@ public class MovieProvider extends ContentProvider {
                 null,
                 sortOrder
         );
+    }
+
+    private Cursor getMovieByListSetting(Uri uri, String[] projection, String sortOrder) {
+        String listSettingFromUri = MovieEntry.getListSettingFromUri(uri);
+        if (listSettingFromUri.equals(getContext().getResources().getString(R.string.pref_show_movies_by_favorite))) {
+            String[] selectionArgs = new String[]{"1"};
+            String selection = sMovieListSettingFavorite;
+
+            return sMovieByListSettingFavoriteQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder
+            );
+        }
+
+        String[] selectionArgs = new String[]{listSettingFromUri};
+        String selection = sMovieListSetting;
+
+        return sMovieByListSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+
     }
 
     static UriMatcher buildUriMatcher() {
@@ -63,7 +125,8 @@ public class MovieProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, MovieContract.PATH_MOVIE, MOVIE);
-        matcher.addURI(authority, MovieContract.PATH_MOVIE + "/*", MOVIE_WITH_NAME);
+        matcher.addURI(authority, MovieContract.PATH_TITLE + "/*", MOVIE_WITH_NAME);
+        matcher.addURI(authority, MovieContract.PATH_MOVIE + "/*", MOVIE_WITH_LIST_SETTING);
 
         return matcher;
     }
@@ -99,7 +162,7 @@ public class MovieProvider extends ContentProvider {
         // and query the database accordingly.
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
-            // "inventory"
+            // "movie"
             case MOVIE: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MovieEntry.TABLE_NAME,
@@ -112,9 +175,14 @@ public class MovieProvider extends ContentProvider {
                 );
                 break;
             }
-            // "inventory/*"
+            // "movie/*"
             case MOVIE_WITH_NAME: {
-                retCursor = getInventoryByName(uri, projection, sortOrder);
+                retCursor = getMovieByName(uri, projection, sortOrder);
+                break;
+            }
+            // "movie/*"
+            case MOVIE_WITH_LIST_SETTING: {
+                retCursor = getMovieByListSetting(uri, projection, sortOrder);
                 break;
             }
 
@@ -134,7 +202,7 @@ public class MovieProvider extends ContentProvider {
         switch (match) {
             case MOVIE: {
                 long _id = db.insert(MovieEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
+                if (_id > 0)
                     returnUri = MovieEntry.buildMovieUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
@@ -153,7 +221,7 @@ public class MovieProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
         // this makes delete all rows return the number of rows deleted
-        if ( null == selection ) selection = "1";
+        if (null == selection) selection = "1";
         switch (match) {
             case MOVIE:
                 rowsDeleted = db.delete(

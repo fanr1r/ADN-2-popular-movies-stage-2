@@ -26,7 +26,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Table create statement
         // Create a table to hold products.
-        final String SQL_CREATE_INVENTORY_TABLE = "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
                 MovieEntry._ID + " INTEGER PRIMARY KEY," +
                 MovieEntry.COLUMN_MOVIE_LIST_SETTING + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
@@ -39,7 +39,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 " );";
 
         // creating table
-        db.execSQL(SQL_CREATE_INVENTORY_TABLE);
+        db.execSQL(SQL_CREATE_MOVIE_TABLE);
     }
 
     @Override

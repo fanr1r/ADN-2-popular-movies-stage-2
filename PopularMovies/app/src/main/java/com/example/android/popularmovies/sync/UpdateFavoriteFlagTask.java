@@ -72,7 +72,7 @@ public class UpdateFavoriteFlagTask extends AsyncTask<String, Void, Void> {
         String selection = MovieEntry.COLUMN_TITLE + " LIKE ?";
         String[] selectionArgs = {title};
 
-        // Finally, insert inventory data into the database.
+        // Finally, insert movie data into the database.
         db.update(
                 MovieEntry.TABLE_NAME,
                 productValues,

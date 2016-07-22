@@ -19,12 +19,16 @@ public class MovieContract {
     // For instance, content://com.example.android.popularmovies.app/movie/ is a valid path for
     // looking at movie.
     public static final String PATH_MOVIE = "movie";
+    public static final String PATH_TITLE = "title";
 
     /* Inner class that defines the table contents of the movie table */
     public static final class MovieEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE).build();
+
+        public static final Uri CONTENT_URI_TITLE =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_TITLE).build();
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
@@ -69,10 +73,18 @@ public class MovieContract {
         }
 
         public static Uri buildMovieUri(String name) {
-            return CONTENT_URI.buildUpon().appendPath(name).build();
+            return CONTENT_URI_TITLE.buildUpon().appendPath(name).build();
+        }
+
+        public static Uri buildMovieUriWithListSetting(String movieListSetting) {
+            return CONTENT_URI.buildUpon().appendPath(movieListSetting).build();
         }
 
         public static String getTitleFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static String getListSettingFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
 

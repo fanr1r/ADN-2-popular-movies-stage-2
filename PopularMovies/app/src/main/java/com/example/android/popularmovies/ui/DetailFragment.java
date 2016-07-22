@@ -110,10 +110,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader loader = null;
         if (null != mUri) {
             // Now create and return a CursorLoader that will take care of
             // creating a Cursor for the data being displayed.
-            return new CursorLoader(
+            loader = new CursorLoader(
                     getActivity(),
                     mUri,
                     DETAIL_COLUMNS,
@@ -122,7 +123,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     null
             );
         }
-        return null;
+        return loader;
     }
 
     @Override
