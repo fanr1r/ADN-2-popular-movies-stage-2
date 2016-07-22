@@ -207,7 +207,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             trailersLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailers[finalI].getUrl())));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailers[finalI].getUrl()));
+                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
                 }
             });
             trailersLayout.setGravity(Gravity.CENTER_VERTICAL);
