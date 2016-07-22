@@ -22,17 +22,28 @@ public class MovieAdapter extends CursorAdapter {
         mContext = context;
     }
 
+    public static class  ViewHolder {
+        public final ImageView iconView;
+
+        public ViewHolder(View view) {
+            iconView = (ImageView) view.findViewById(R.id.movie_image);
+        }
+    }
+
     /*
         Remember that these views are reused as needed.
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.movie_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.movie_item, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        view.setTag(viewHolder);
+        return view;
     }
 
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
-        ImageView iconView = (ImageView) view.findViewById(R.id.movie_image);
+        ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         final String FORECAST_BASE_URL = "http://image.tmdb.org/t/p/";
         String imageSize;
@@ -42,7 +53,7 @@ public class MovieAdapter extends CursorAdapter {
             imageSize = "w185";
         }
         String url = FORECAST_BASE_URL + imageSize + "/" + cursor.getString(MainActivityFragment.COL_MOVIE_POSTER_PATH);
-        Picasso.with(context).load(url).into(iconView);
+        Picasso.with(context).load(url).into(viewHolder.iconView);
     }
 
     public void setUseTodayLayout(boolean useTodayLayout) {
